@@ -41,9 +41,16 @@
             $stmt = $this->conn->prepare($query);
             $stmt->execute([$id]);
             $task = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Allow status update to "Completed" for any task
+            if ($status === 'Completed' && $task_name === null && $start_date === null && $end_date === null && $description === null) {
+                $query = "UPDATE " . $this->table . " SET status = ? WHERE id = ?";
+                $stmt = $this->conn->prepare($query);
+                return $stmt->execute([$status, $id]);
+            }
         
-            if ($task && $task['status'] !== 'Pending') {
-                return false; // Only pending tasks can be updated
+            if ($task && $task['status'] !== 'Pending' && $task['status'] !== 'In-progress') {
+                return false; // Only pending or in-progress tasks can be updated
             }
         
             $query = "UPDATE " . $this->table . " SET task_name = ?, start_date = ?, end_date = ?, status = ?, description = ? WHERE id = ?";
@@ -57,7 +64,7 @@
             $stmt->execute([$id]);
             $task = $stmt->fetch(PDO::FETCH_ASSOC);
         
-            if ($task && $task['status'] !== 'Pending') {
+            if ($task && $task['status'] !== 'Pending' && $task['status'] !== 'Completed') {
                 return false; // Only pending tasks can be deleted
             }
         

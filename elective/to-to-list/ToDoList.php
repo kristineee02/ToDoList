@@ -14,7 +14,6 @@ $stmt = $conn->prepare($query);
 $stmt->execute();
 $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,7 +105,6 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <select id="status" class="form-control">
                         <option value="pending">Pending</option>
                         <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -146,7 +144,6 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <select id="edit_task_status" class="form-control">
                         <option value="pending">Pending</option>
                         <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
                     </select>
                 </div>
                 <div class="form-group">
