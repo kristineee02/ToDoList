@@ -70,36 +70,28 @@ switch ($method) {
             }
         
             if (isset($data['id'])) {
-                $existingTask = $task->getTaskById($data['id']);
-                if (!$existingTask) {
-                    echo json_encode(["status" => "error", "message" => "Task not found"]);
-                    exit;
-                }
-        
-                $task_name = $data['task_name'] ?? $existingTask['task_name'];
-                $start_date = $data['start_date'] ?? $existingTask['start_date'];
-                $end_date = $data['end_date'] ?? $existingTask['end_date'];
-                $status = $data['status'] ?? $existingTask['status'];
-                $description = $data['description'] ?? $existingTask['description'];
-        
                 $result = $task->updateTask(
                     $data['id'],
-                    $task_name,
-                    $start_date,
-                    $end_date,
-                    $status,
-                    $description
+                    $data['task_name'] ?? null,
+                    $data['start_date'] ?? null,
+                    $data['end_date'] ?? null,
+                    $data['status'] ?? null,
+                    $data['description'] ?? null
                 );
         
-                if ($result) {
-                    echo json_encode(["status" => "success", "message" => "Task updated successfully"]);
+                if (is_array($result)) {
+                    echo json_encode(["status" => $result['success'] ? "success" : "error", "message" => $result['message']]);
                 } else {
-                    echo json_encode(["status" => "error", "message" => "You can only update pending tasks!"]);
+                    echo json_encode([
+                        "status" => $result ? "success" : "error",
+                        "message" => $result ? "Task updated successfully" : "Failed to update task: You can only update pending tasks!"
+                    ]);
                 }
             } else {
                 echo json_encode(["status" => "error", "message" => "Invalid input - missing ID"]);
             }
             break;
+
 
     case 'DELETE':
         if (isset($_GET['id'])) {

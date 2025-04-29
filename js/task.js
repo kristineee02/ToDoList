@@ -189,7 +189,7 @@ function markAsDone(id) {
             .then(data => {
                 alert(data.message);
                 if (data.status === "success") {
-                    loadTasks();
+                    location.reload();
                 }
             })
             .catch(error => {
