@@ -169,14 +169,13 @@ function closeEditModal() {
     document.getElementById("editModal").style.display = "none";
 }
 
-// Mark task as done
 function markAsDone(id) {
-    if (confirm("Mark this task as completed?")) {
+    if (confirm("Are you sure you want to mark this task as completed?")) {
         fetch("../api/task_api.php", {
             method: "PUT",
             body: JSON.stringify({
                 id: id,
-                status: "completed"
+                status: "Completed"
             }),
             headers: { "Content-Type": "application/json" }
         })
@@ -189,7 +188,7 @@ function markAsDone(id) {
             .then(data => {
                 alert(data.message);
                 if (data.status === "success") {
-                    location.reload();
+                    location.reload(); 
                 }
             })
             .catch(error => {

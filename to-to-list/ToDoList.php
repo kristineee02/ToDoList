@@ -47,7 +47,7 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $startDate = htmlspecialchars($task['start_date']);
         $endDate = htmlspecialchars($task['end_date']);
         $statusClass = strtolower($task['status']) === 'completed' ? 'completed' : 
-                       (strtolower($task['status']) === 'pending');
+                       (strtolower($task['status']) === 'in-progress' ? 'in-progress' : 'pending');
         $taskData = htmlspecialchars(json_encode($task), ENT_QUOTES, 'UTF-8');
     ?>
         <div class="task-card">
@@ -144,7 +144,6 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <select id="edit_task_status" class="form-control">
                         <option value="pending">Pending</option>
                         <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
                     </select>
                 </div>
                 <div class="form-group">

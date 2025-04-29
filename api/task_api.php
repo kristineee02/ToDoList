@@ -70,13 +70,23 @@ switch ($method) {
             }
         
             if (isset($data['id'])) {
+                // Fetch existing task to merge with provided data
+                $existingTask = $task->getTaskById($data['id']);
+                if (!$existingTask) {
+                    echo json_encode(["status" => "error", "message" => "Task not found"]);
+                    exit;
+                }
+        
+                // Merge provided data with existing task data
+                $taskData = array_merge($existingTask, $data);
+        
                 $result = $task->updateTask(
                     $data['id'],
-                    $data['task_name'] ?? null,
-                    $data['start_date'] ?? null,
-                    $data['end_date'] ?? null,
-                    $data['status'] ?? null,
-                    $data['description'] ?? null
+                    $taskData['task_name'] ?? $existingTask['task_name'],
+                    $taskData['start_date'] ?? $existingTask['start_date'],
+                    $taskData['end_date'] ?? $existingTask['end_date'],
+                    $taskData['status'] ?? $existingTask['status'],
+                    $taskData['description'] ?? $existingTask['description']
                 );
         
                 if (is_array($result)) {
@@ -84,7 +94,7 @@ switch ($method) {
                 } else {
                     echo json_encode([
                         "status" => $result ? "success" : "error",
-                        "message" => $result ? "Task updated successfully" : "Failed to update task: You can only update pending tasks!"
+                        "message" => $result ? "Task updated successfully" : "Cannot update completed task"
                     ]);
                 }
             } else {
@@ -100,7 +110,7 @@ switch ($method) {
             if ($result) {
                 echo json_encode(["status" => "success", "message" => "Task deleted successfully"]);
             } else {
-                echo json_encode(["status" => "error", "message" => "You can only delete pending tasks!"]);
+                echo json_encode(["status" => "error", "message" => "You can only delete pending or completed tasks!"]);
             }
         } else {
             echo json_encode(["status" => "error", "message" => "Invalid ID"]);
